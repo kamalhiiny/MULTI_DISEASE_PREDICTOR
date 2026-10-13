@@ -1,0 +1,615 @@
+
+{% extends 'main.html' %}
+{% block content %}
+
+{% if message %}
+<div class="alert alert-danger mb-4" role="alert">
+    <i class="fa fa-exclamation-circle mr-2"></i>{{ message }}
+</div>
+{% endif %}
+
+<style>
+/* Page-scoped styling: main.html remains untouched */
+.med-home {
+    --purple: #5b21b6;
+    --deep-purple: #3b0764;
+    --lavender: #f3eaff;
+    --ink: #241b35;
+    --muted: #716b7d;
+    --border: #ece5f5;
+    color: var(--ink);
+    font-family: "DM Sans", "Segoe UI", sans-serif;
+    padding-bottom: 28px;
+}
+
+.med-home * {
+    box-sizing: border-box;
+}
+
+.med-home .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 48px 42px;
+    margin-bottom: 32px;
+    border-radius: 24px;
+    background: linear-gradient(120deg, #3b0764 0%, #6528b5 58%, #9562d5 100%);
+    color: #fff;
+    box-shadow: 0 16px 40px rgba(75, 24, 125, .17);
+}
+
+.med-home .hero::after {
+    content: "";
+    position: absolute;
+    width: 290px;
+    height: 290px;
+    border: 1px solid rgba(255,255,255,.17);
+    border-radius: 50%;
+    right: -80px;
+    top: -115px;
+    box-shadow: 0 0 0 36px rgba(255,255,255,.035),
+                0 0 0 72px rgba(255,255,255,.025);
+    pointer-events: none;
+}
+
+.med-home .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+}
+
+.med-home .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 17px;
+    padding: 8px 13px;
+    border: 1px solid rgba(255,255,255,.24);
+    border-radius: 30px;
+    background: rgba(255,255,255,.10);
+    color: #f3e8ff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+}
+
+.med-home .hero h1 {
+    margin: 0 0 16px;
+    color: #fff;
+    text-align: left;
+    font-family: "Manrope", "Segoe UI", sans-serif;
+    font-size: clamp(30px, 4vw, 46px);
+    line-height: 1.18;
+    font-weight: 800;
+    letter-spacing: -1.4px;
+}
+
+.med-home .hero h1 span {
+    color: #dfc5ff;
+}
+
+.med-home .hero p {
+    max-width: 620px;
+    margin: 0;
+    color: #eee4fa;
+    font-size: 15px;
+    line-height: 1.85;
+}
+
+.med-home .hero-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 24px;
+    padding: 11px 15px;
+    border-radius: 11px;
+    background: rgba(255,255,255,.11);
+    color: #fff;
+    font-size: 12px;
+}
+
+.med-home .section-heading {
+    margin: 0 0 7px;
+    font-family: "Manrope", "Segoe UI", sans-serif;
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+}
+
+.med-home .section-subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.med-home .section-header {
+    margin-bottom: 21px;
+}
+
+.med-home .accuracy-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+    margin-bottom: 38px;
+}
+
+.med-home .accuracy-card {
+    min-width: 0;
+    padding: 21px 18px;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    background: #fff;
+    box-shadow: 0 5px 20px rgba(51, 24, 83, .035);
+    transition: transform .2s ease, box-shadow .2s ease,
+                border-color .2s ease;
+}
+
+.med-home .accuracy-card:hover {
+    transform: translateY(-4px);
+    border-color: #d8c3f4;
+    box-shadow: 0 12px 25px rgba(75, 24, 125, .09);
+}
+
+.med-home .accuracy-icon {
+    display: flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 17px;
+    border-radius: 13px;
+    background: #f1e8ff;
+    color: var(--purple);
+    font-size: 19px;
+}
+
+.med-home .accuracy-name {
+    min-height: 38px;
+    margin-bottom: 10px;
+    color: #625a70;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.55;
+}
+
+.med-home .accuracy-value {
+    color: var(--purple);
+    font-family: "Manrope", "Segoe UI", sans-serif;
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.2;
+}
+
+.med-home .accuracy-caption {
+    margin-top: 7px;
+    color: #9890a3;
+    font-size: 10px;
+}
+
+.med-home .disease-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 19px;
+}
+
+.med-home .disease-card {
+    min-width: 0;
+    padding: 25px;
+    border: 1px solid var(--border);
+    border-radius: 19px;
+    background: #fff;
+    box-shadow: 0 5px 22px rgba(51, 24, 83, .035);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.med-home .disease-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(51, 24, 83, .075);
+}
+
+.med-home .disease-title-row {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 16px;
+}
+
+.med-home .disease-icon {
+    display: flex;
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: var(--lavender);
+    color: var(--purple);
+    font-size: 20px;
+}
+
+.med-home .disease-card h3 {
+    margin: 0;
+    color: var(--ink);
+    font-family: "Manrope", "Segoe UI", sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.45;
+}
+
+.med-home .disease-card p {
+    margin: 0 0 20px;
+    color: #716a7d;
+    font-size: 13px;
+    line-height: 1.85;
+}
+
+.med-home .symptoms-title {
+    margin-bottom: 12px;
+    color: #342646;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.med-home .symptom-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.med-home .symptom-list li {
+    padding: 7px 10px;
+    border: 1px solid #eee7f6;
+    border-radius: 8px;
+    background: #faf8fd;
+    color: #655b73;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.med-home .info-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    margin-top: 28px;
+    padding: 19px 21px;
+    border: 1px solid #e5d8fa;
+    border-radius: 15px;
+    background: #f8f3ff;
+    color: #66547e;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.med-home .info-note i {
+    margin-top: 3px;
+    color: var(--purple);
+    font-size: 18px;
+}
+
+.med-home .info-note p {
+    margin: 0;
+}
+
+@media (max-width: 991px) {
+    .med-home .accuracy-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .med-home .hero {
+        padding: 36px 28px;
+    }
+}
+
+@media (max-width: 575px) {
+    .med-home .hero {
+        padding: 30px 22px;
+        border-radius: 18px;
+    }
+
+    .med-home .hero h1 {
+        font-size: 31px;
+        letter-spacing: -.8px;
+    }
+
+    .med-home .accuracy-grid,
+    .med-home .disease-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 13px;
+    }
+
+    .med-home .accuracy-card {
+        padding: 18px;
+    }
+
+    .med-home .accuracy-name {
+        min-height: 0;
+    }
+
+    .med-home .disease-card {
+        padding: 21px;
+    }
+
+    .med-home .section-heading {
+        font-size: 21px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .med-home *,
+    .med-home *::before,
+    .med-home *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+</style>
+
+<div class="med-home">
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="eyebrow">
+                <i class="fa fa-heartbeat"></i>
+                Smart healthcare research
+            </div>
+
+            <h1>
+                A smarter approach to
+                <span>health awareness.</span>
+            </h1>
+
+            <p>
+                Welcome to Medibuddy, a machine-learning-based disease
+                prediction project designed to explore health indicators
+                and provide information about selected medical conditions.
+            </p>
+
+            <div class="hero-note">
+                <i class="fa fa-shield"></i>
+                Educational and informational research prototype
+            </div>
+        </div>
+    </section>
+
+    <!-- Model accuracies -->
+    <section aria-labelledby="accuracy-heading">
+        <div class="section-header">
+            <h2 class="section-heading" id="accuracy-heading">
+                Model performance
+            </h2>
+            <p class="section-subtitle">
+                Reported accuracy values for the models included in the project.
+            </p>
+        </div>
+
+        <div class="accuracy-grid">
+            <article class="accuracy-card">
+                <div class="accuracy-icon">
+                    <i class="fa fa-tint"></i>
+                </div>
+                <div class="accuracy-name">Diabetes Model</div>
+                <div class="accuracy-value">92.54%</div>
+                <div class="accuracy-caption">Reported accuracy</div>
+            </article>
+
+            <article class="accuracy-card">
+                <div class="accuracy-icon">
+                    <i class="fa fa-heartbeat"></i>
+                </div>
+                <div class="accuracy-name">Heart Disease Model</div>
+                <div class="accuracy-value">98.70%</div>
+                <div class="accuracy-caption">Reported accuracy</div>
+            </article>
+
+            <article class="accuracy-card">
+                <div class="accuracy-icon">
+                    <i class="fa fa-venus"></i>
+                </div>
+                <div class="accuracy-name">Breast Cancer Model</div>
+                <div class="accuracy-value">97.66%</div>
+                <div class="accuracy-caption">Reported accuracy</div>
+            </article>
+
+            <article class="accuracy-card">
+                <div class="accuracy-icon">
+                    <i class="fa fa-plus-square"></i>
+                </div>
+                <div class="accuracy-name">Kidney Disease Model</div>
+                <div class="accuracy-value">99.16%</div>
+                <div class="accuracy-caption">Reported accuracy</div>
+            </article>
+
+            <article class="accuracy-card">
+                <div class="accuracy-icon">
+                    <i class="fa fa-leaf"></i>
+                </div>
+                <div class="accuracy-name">Liver Disease Model</div>
+                <div class="accuracy-value">71.18%</div>
+                <div class="accuracy-caption">Reported accuracy</div>
+            </article>
+
+            <article class="accuracy-card">
+                <div class="accuracy-icon">
+                    <i class="fa fa-bug"></i>
+                </div>
+                <div class="accuracy-name">Malaria Model</div>
+                <div class="accuracy-value">95.65%</div>
+                <div class="accuracy-caption">Reported accuracy</div>
+            </article>
+
+            <article class="accuracy-card">
+                <div class="accuracy-icon">
+                    <i class="fa fa-stethoscope"></i>
+                </div>
+                <div class="accuracy-name">Pneumonia Model</div>
+                <div class="accuracy-value">91.35%</div>
+                <div class="accuracy-caption">Reported accuracy</div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Disease information -->
+    <section aria-labelledby="disease-heading">
+        <div class="section-header">
+            <h2 class="section-heading" id="disease-heading">
+                Understanding the conditions
+            </h2>
+            <p class="section-subtitle">
+                Learn about each condition, its general characteristics,
+                and symptoms that may require medical attention.
+            </p>
+        </div>
+
+        <div class="disease-grid">
+
+            <article class="disease-card">
+                <div class="disease-title-row">
+                    <div class="disease-icon">
+                        <i class="fa fa-tint"></i>
+                    </div>
+                    <h3>Diabetes</h3>
+                </div>
+
+                <p>
+                    Diabetes mellitus describes conditions that affect how
+                    the body regulates blood glucose. Glucose is an important
+                    energy source, and persistently elevated blood sugar can
+                    lead to serious health complications.
+                </p>
+
+                <div class="symptoms-title">Common symptoms</div>
+                <ul class="symptom-list">
+                    <li>Increased thirst</li>
+                    <li>Frequent urination</li>
+                    <li>Extreme hunger</li>
+                    <li>Unexplained weight loss</li>
+                    <li>Blurred vision</li>
+                </ul>
+            </article>
+
+            <article class="disease-card">
+                <div class="disease-title-row">
+                    <div class="disease-icon">
+                        <i class="fa fa-heartbeat"></i>
+                    </div>
+                    <h3>Heart / Cardiovascular Disease</h3>
+                </div>
+
+                <p>
+                    Cardiovascular diseases affect the heart and blood
+                    vessels. Some conditions cause noticeable symptoms,
+                    while others may develop without obvious warning signs.
+                </p>
+
+                <div class="symptoms-title">Possible symptoms</div>
+                <ul class="symptom-list">
+                    <li>Heart palpitations</li>
+                    <li>Chest pain</li>
+                    <li>Sweating</li>
+                    <li>Lightheadedness</li>
+                    <li>Shortness of breath</li>
+                </ul>
+            </article>
+
+            <article class="disease-card">
+                <div class="disease-title-row">
+                    <div class="disease-icon">
+                        <i class="fa fa-venus"></i>
+                    </div>
+                    <h3>Breast Cancer</h3>
+                </div>
+
+                <p>
+                    Breast cancer occurs when cells in breast tissue grow
+                    abnormally. It can affect women and men, although it is
+                    much more common in women. Early assessment of unusual
+                    breast changes is important.
+                </p>
+
+                <div class="symptoms-title">Possible warning signs</div>
+                <ul class="symptom-list">
+                    <li>New breast or underarm lump</li>
+                    <li>Breast thickening</li>
+                    <li>Skin dimpling</li>
+                    <li>Nipple or skin changes</li>
+                    <li>Nipple-area pain</li>
+                </ul>
+            </article>
+
+            <article class="disease-card">
+                <div class="disease-title-row">
+                    <div class="disease-icon">
+                        <i class="fa fa-plus-square"></i>
+                    </div>
+                    <h3>Chronic Kidney Disease</h3>
+                </div>
+
+                <p>
+                    Chronic kidney disease (CKD) involves gradual damage
+                    that reduces the kidneys' ability to filter waste and
+                    excess fluid from the blood. Symptoms may be absent in
+                    early stages.
+                </p>
+
+                <div class="symptoms-title">Possible symptoms</div>
+                <ul class="symptom-list">
+                    <li>Nausea</li>
+                    <li>Vomiting</li>
+                    <li>Fatigue and weakness</li>
+                    <li>Muscle cramps</li>
+                    <li>Loss of appetite</li>
+                </ul>
+            </article>
+
+            <article class="disease-card">
+                <div class="disease-title-row">
+                    <div class="disease-icon">
+                        <i class="fa fa-leaf"></i>
+                    </div>
+                    <h3>Liver Disease</h3>
+                </div>
+
+                <p>
+                    Liver disease includes several conditions that can
+                    damage liver tissue and impair its function. Some
+                    long-term conditions can cause scarring and may lead
+                    to severe complications if untreated.
+                </p>
+
+                <div class="symptoms-title">Possible symptoms</div>
+                <ul class="symptom-list">
+                    <li>Abdominal pain</li>
+                    <li>Easy bruising</li>
+                    <li>Urine or stool color changes</li>
+                    <li>Fatigue</li>
+                    <li>Nausea or vomiting</li>
+                </ul>
+            </article>
+
+
+
+        </div>
+    </section>
+
+    <div class="info-note">
+        <i class="fa fa-info-circle"></i>
+        <p>
+            <strong>Important:</strong> Medibuddy is an educational
+            machine-learning project. The displayed accuracy values are
+            reported project metrics and do not establish clinical
+            reliability. Predictions and symptom information must not
+            replace professional medical evaluation or diagnosis.
+        </p>
+    </div>
+
+</div>
+
+{% endblock %}
