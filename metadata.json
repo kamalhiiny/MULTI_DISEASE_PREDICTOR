@@ -1,0 +1,6 @@
+{
+  "name": "Multi Disease Predictor",
+  "description": "Multi-disease prediction web application for diabetes, breast cancer, heart, kidney, liver disease, malaria, and pneumonia.",
+  "permissions": [],
+  "capabilities": []
+}

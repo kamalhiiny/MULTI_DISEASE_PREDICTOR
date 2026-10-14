@@ -1,0 +1,154 @@
+<%- include('partials/header') %>
+
+<div class="row justify-content-center">
+  <div class="col-lg-9 col-xl-8">
+
+    <div class="med-page-header">
+      <div class="med-page-badge">
+        <i class="fa-solid fa-droplet"></i> Endocrinology Diagnostic Model
+      </div>
+      <h1 class="med-page-title">Diabetes Mellitus Risk Assessment</h1>
+      <p class="med-page-desc">
+        Enter the patient's metabolic and biometric readings below to evaluate probability of diabetes mellitus.
+      </p>
+    </div>
+
+    <div class="med-card">
+      <!-- Quick Fill Helper Toolbar -->
+      <div class="preset-toolbar">
+        <div class="preset-toolbar-title">
+          <i class="fa-solid fa-wand-magic-sparkles text-primary"></i> Preset Demo Profiles:
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn-med-secondary" onclick="fillHealthy()">
+            <i class="fa-solid fa-check text-success"></i> Healthy Profile
+          </button>
+          <button type="button" class="btn-med-secondary" onclick="fillRisk()">
+            <i class="fa-solid fa-triangle-exclamation text-danger"></i> High-Risk Profile
+          </button>
+        </div>
+      </div>
+
+      <form id="diabetesForm" class="form-horizontal" action="/predict" method="POST">
+        <div class="row">
+          <!-- Col 1 -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="Pregnancies">
+                <span>Number of Pregnancies</span>
+                <span class="unit">count</span>
+              </label>
+              <input id="Pregnancies" class="form-control" type="number" step="any" min="0" name="Pregnancies" placeholder="e.g. 2" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="Glucose">
+                <span>Fasting Blood Glucose</span>
+                <span class="unit">mg/dL</span>
+              </label>
+              <input id="Glucose" class="form-control" type="number" step="any" min="0" name="Glucose" placeholder="e.g. 110" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="BloodPressure">
+                <span>Diastolic Blood Pressure</span>
+                <span class="unit">mmHg</span>
+              </label>
+              <input id="BloodPressure" class="form-control" type="number" step="any" min="0" name="BloodPressure" placeholder="e.g. 72" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="SkinThickness">
+                <span>Triceps Skin Fold Thickness</span>
+                <span class="unit">mm</span>
+              </label>
+              <input id="SkinThickness" class="form-control" type="number" step="any" min="0" name="SkinThickness" placeholder="e.g. 23" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="Insulin">
+                <span>2-Hour Serum Insulin</span>
+                <span class="unit">µU/mL</span>
+              </label>
+              <input id="Insulin" class="form-control" type="number" step="any" min="0" name="Insulin" placeholder="e.g. 85" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="BMI">
+                <span>Body Mass Index (BMI)</span>
+                <span class="unit">kg/m²</span>
+              </label>
+              <input id="BMI" class="form-control" type="number" step="any" min="0" name="BMI" placeholder="e.g. 24.5" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="DiabetesPedigreeFunction">
+                <span>Diabetes Pedigree Function</span>
+                <span class="unit">score</span>
+              </label>
+              <input id="DiabetesPedigreeFunction" class="form-control" type="number" step="any" min="0" name="DiabetesPedigreeFunction" placeholder="e.g. 0.35" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="Age">
+                <span>Patient Age</span>
+                <span class="unit">years</span>
+              </label>
+              <input id="Age" class="form-control" type="number" step="any" min="1" name="Age" placeholder="e.g. 38" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-top d-flex align-items-center justify-content-between">
+          <a href="/" class="btn-med-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back to Directory
+          </a>
+          <button type="submit" class="btn-med-primary">
+            <i class="fa-solid fa-stethoscope"></i> Calculate Risk Assessment
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function fillHealthy() {
+    document.getElementById('Pregnancies').value = '1';
+    document.getElementById('Glucose').value = '85';
+    document.getElementById('BloodPressure').value = '68';
+    document.getElementById('SkinThickness').value = '20';
+    document.getElementById('Insulin').value = '60';
+    document.getElementById('BMI').value = '22.4';
+    document.getElementById('DiabetesPedigreeFunction').value = '0.24';
+    document.getElementById('Age').value = '29';
+  }
+
+  function fillRisk() {
+    document.getElementById('Pregnancies').value = '6';
+    document.getElementById('Glucose').value = '168';
+    document.getElementById('BloodPressure').value = '88';
+    document.getElementById('SkinThickness').value = '35';
+    document.getElementById('Insulin').value = '240';
+    document.getElementById('BMI').value = '38.2';
+    document.getElementById('DiabetesPedigreeFunction').value = '0.85';
+    document.getElementById('Age').value = '54';
+  }
+</script>
+
+<%- include('partials/footer') %>

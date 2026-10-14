@@ -1,0 +1,184 @@
+<%- include('partials/header') %>
+
+<div class="row justify-content-center">
+  <div class="col-lg-9 col-xl-8">
+
+    <div class="med-page-header">
+      <div class="med-page-badge" style="background: #dcfce7; border-color: #bbf7d0; color: #16a34a;">
+        <i class="fa-solid fa-shield"></i> Hepatology Diagnostic Suite
+      </div>
+      <h1 class="med-page-title">Hepatic Function &amp; Liver Disease Predictor</h1>
+      <p class="med-page-desc">
+        Analyzes serum bilirubin fractions, hepatic transaminases, and protein synthesis capacity to assess liver damage.
+      </p>
+    </div>
+
+    <div class="med-card">
+      <!-- Preset Toolbar -->
+      <div class="preset-toolbar">
+        <div class="preset-toolbar-title">
+          <i class="fa-solid fa-wand-magic-sparkles text-primary"></i> Preset Hepatic Profiles:
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn-med-secondary" onclick="fillHealthyLiver()">
+            <i class="fa-solid fa-check text-success"></i> Normal Hepatic Panel
+          </button>
+          <button type="button" class="btn-med-secondary" onclick="fillRiskLiver()">
+            <i class="fa-solid fa-triangle-exclamation text-danger"></i> Liver Impairment Panel
+          </button>
+        </div>
+      </div>
+
+      <form id="liverForm" class="form-horizontal" action="/predict" method="POST">
+        <div class="row">
+          <!-- Demographics -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="Age">
+                <span>Patient Age</span>
+                <span class="unit">years</span>
+              </label>
+              <input id="Age" class="form-control" type="number" step="any" min="1" name="Age" placeholder="e.g. 45" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="Gender">
+                <span>Biological Sex</span>
+                <span class="unit">0: Male · 1: Female</span>
+              </label>
+              <select id="Gender" class="form-control" name="Gender" required>
+                <option value="0">0 - Male</option>
+                <option value="1">1 - Female</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Bilirubin -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="Total_Bilirubin">
+                <span>Total Bilirubin</span>
+                <span class="unit">mg/dL</span>
+              </label>
+              <input id="Total_Bilirubin" class="form-control" type="number" step="any" min="0" name="Total_Bilirubin" placeholder="e.g. 0.9" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="Direct_Bilirubin">
+                <span>Conjugated (Direct) Bilirubin</span>
+                <span class="unit">mg/dL</span>
+              </label>
+              <input id="Direct_Bilirubin" class="form-control" type="number" step="any" min="0" name="Direct_Bilirubin" placeholder="e.g. 0.2" required>
+            </div>
+          </div>
+
+          <!-- Enzymes -->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="Alkaline_Phosphotase">
+                <span>Alkaline Phosphatase (ALP)</span>
+                <span class="unit">IU/L</span>
+              </label>
+              <input id="Alkaline_Phosphotase" class="form-control" type="number" step="any" min="0" name="Alkaline_Phosphotase" placeholder="e.g. 180" required>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="Alamine_Aminotransferase">
+                <span>Alanine Aminotransferase (ALT)</span>
+                <span class="unit">IU/L</span>
+              </label>
+              <input id="Alamine_Aminotransferase" class="form-control" type="number" step="any" min="0" name="Alamine_Aminotransferase" placeholder="e.g. 28" required>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="Aspartate_Aminotransferase">
+                <span>Aspartate Aminotransferase (AST)</span>
+                <span class="unit">IU/L</span>
+              </label>
+              <input id="Aspartate_Aminotransferase" class="form-control" type="number" step="any" min="0" name="Aspartate_Aminotransferase" placeholder="e.g. 32" required>
+            </div>
+          </div>
+
+          <!-- Protein synthesis -->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="Total_Protiens">
+                <span>Total Proteins</span>
+                <span class="unit">g/dL</span>
+              </label>
+              <input id="Total_Protiens" class="form-control" type="number" step="any" min="0" name="Total_Protiens" placeholder="e.g. 7.2" required>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="Albumin">
+                <span>Serum Albumin</span>
+                <span class="unit">g/dL</span>
+              </label>
+              <input id="Albumin" class="form-control" type="number" step="any" min="0" name="Albumin" placeholder="e.g. 3.8" required>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="Albumin_and_Globulin_Ratio">
+                <span>A/G Ratio</span>
+                <span class="unit">ratio</span>
+              </label>
+              <input id="Albumin_and_Globulin_Ratio" class="form-control" type="number" step="any" min="0" name="Albumin_and_Globulin_Ratio" placeholder="e.g. 1.1" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-top d-flex align-items-center justify-content-between">
+          <a href="/" class="btn-med-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back to Directory
+          </a>
+          <button type="submit" class="btn-med-primary">
+            <i class="fa-solid fa-shield"></i> Run Liver Assessment
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function fillHealthyLiver() {
+    document.getElementById('Age').value = '38';
+    document.getElementById('Gender').value = '0';
+    document.getElementById('Total_Bilirubin').value = '0.8';
+    document.getElementById('Direct_Bilirubin').value = '0.2';
+    document.getElementById('Alkaline_Phosphotase').value = '175';
+    document.getElementById('Alamine_Aminotransferase').value = '24';
+    document.getElementById('Aspartate_Aminotransferase').value = '26';
+    document.getElementById('Total_Protiens').value = '7.4';
+    document.getElementById('Albumin').value = '4.1';
+    document.getElementById('Albumin_and_Globulin_Ratio').value = '1.24';
+  }
+
+  function fillRiskLiver() {
+    document.getElementById('Age').value = '55';
+    document.getElementById('Gender').value = '0';
+    document.getElementById('Total_Bilirubin').value = '4.6';
+    document.getElementById('Direct_Bilirubin').value = '2.2';
+    document.getElementById('Alkaline_Phosphotase').value = '380';
+    document.getElementById('Alamine_Aminotransferase').value = '98';
+    document.getElementById('Aspartate_Aminotransferase').value = '112';
+    document.getElementById('Total_Protiens').value = '5.8';
+    document.getElementById('Albumin').value = '2.4';
+    document.getElementById('Albumin_and_Globulin_Ratio').value = '0.65';
+  }
+</script>
+
+<%- include('partials/footer') %>

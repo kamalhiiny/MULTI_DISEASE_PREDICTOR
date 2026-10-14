@@ -1,0 +1,136 @@
+<%- include('partials/header') %>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-xl-7">
+
+    <div class="med-page-header">
+      <div class="med-page-badge" style="background: #ccfbf1; border-color: #99f6e4; color: #0d9488;">
+        <i class="fa-solid fa-lungs"></i> Pulmonology Radiographic Vision
+      </div>
+      <h1 class="med-page-title">Pneumonia Chest Radiograph Classifier</h1>
+      <p class="med-page-desc">
+        Deep convolutional network screens anterior-posterior (AP) chest radiographs for pulmonary parenchymal opacities and alveolar consolidations.
+      </p>
+    </div>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+      <div class="alert alert-danger d-flex align-items-center mb-4" role="alert" style="border-radius: 12px; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; padding: 14px 18px;">
+        <i class="fa-solid fa-triangle-exclamation mr-2" style="font-size: 18px;"></i>
+        <div><%= message %></div>
+      </div>
+    <% } %>
+
+    <div class="med-card">
+      <form class="form-horizontal" action="/pneumoniapredict" method="POST" enctype="multipart/form-data">
+        
+        <!-- Upload Dropzone -->
+        <div class="upload-dropzone p-4 text-center mb-4" style="border: 2px dashed #cbd5e1; border-radius: 16px; background: #f8fafc; transition: all 0.2s ease;">
+          <input id="xrayUpload" type="file" name="image" accept="image/*" class="d-none" onchange="previewXray(this)" required>
+          
+          <div id="uploadPrompt" class="py-3">
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 14px;">
+              <i class="fa-solid fa-lungs"></i>
+            </div>
+            <h5 class="font-weight-bold text-dark mb-1" style="font-size: 16px;">Upload Chest Radiograph (X-Ray)</h5>
+            <p class="text-muted mb-3" style="font-size: 13px;">Drop radiograph here, or click to browse files</p>
+            <button type="button" class="btn-med-secondary" onclick="document.getElementById('xrayUpload').click()">
+              <i class="fa-solid fa-folder-open"></i> Select Radiograph
+            </button>
+            <div class="text-muted mt-2" style="font-size: 11px;">Standard Chest AP / PA view in PNG or JPG format</div>
+          </div>
+
+          <!-- Preview Area -->
+          <div id="previewArea" class="d-none mt-2">
+            <div class="position-relative d-inline-block">
+              <img id="xrayPreview" src="#" alt="Radiograph Preview" style="max-height: 260px; border-radius: 12px; border: 1px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.06); object-fit: contain;">
+              <button type="button" class="btn btn-sm btn-danger position-absolute" style="top: -10px; right: -10px; border-radius: 50%; width: 28px; height: 28px; padding: 0;" onclick="removeXray()">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div id="fileName" class="text-dark font-weight-bold mt-2" style="font-size: 13px;"></div>
+          </div>
+        </div>
+
+        <!-- Sample X-Ray Strip -->
+        <div class="mb-4 p-3" style="background: #f1f5f9; border-radius: 12px; border: 1px solid #e2e8f0;">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="font-weight-bold text-dark" style="font-size: 12px;">Quick Test with Clinical Cohort Samples:</span>
+            <span class="text-muted" style="font-size: 11px;">Click to load</span>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <button type="button" class="btn btn-white w-100 border text-left d-flex align-items-center gap-2" style="background: #fff; font-size: 12px; padding: 8px 12px; border-radius: 8px;" onclick="loadSampleXray('/test_images/pneumonia/CHEST_X_RAY.PNG', 'CHEST_X_RAY.PNG')">
+                <img src="/test_images/pneumonia/CHEST_X_RAY.PNG" style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover;" alt="Sample Normal">
+                <div>
+                  <div class="font-weight-bold text-dark">Chest Radiograph A</div>
+                  <div class="text-muted" style="font-size: 10px;">Cohort Case 1</div>
+                </div>
+              </button>
+            </div>
+            <div class="col-6">
+              <button type="button" class="btn btn-white w-100 border text-left d-flex align-items-center gap-2" style="background: #fff; font-size: 12px; padding: 8px 12px; border-radius: 8px;" onclick="loadSampleXray('/test_images/pneumonia/CHEST_X_RAY2.PNG', 'CHEST_X_RAY2.PNG')">
+                <img src="/test_images/pneumonia/CHEST_X_RAY2.PNG" style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover;" alt="Sample Consolidated">
+                <div>
+                  <div class="font-weight-bold text-dark">Chest Radiograph B</div>
+                  <div class="text-muted" style="font-size: 10px;">Cohort Case 2</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+          <a href="/" class="btn-med-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back to Directory
+          </a>
+          <button type="submit" class="btn-med-primary">
+            <i class="fa-solid fa-lungs"></i> Analyze Radiograph
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function previewXray(input) {
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('xrayPreview').src = e.target.result;
+        document.getElementById('fileName').innerText = file.name;
+        document.getElementById('previewArea').classList.remove('d-none');
+        document.getElementById('uploadPrompt').classList.add('d-none');
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function removeXray() {
+    const input = document.getElementById('xrayUpload');
+    input.value = '';
+    document.getElementById('previewArea').classList.add('d-none');
+    document.getElementById('uploadPrompt').classList.remove('d-none');
+  }
+
+  async function loadSampleXray(url, filename) {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const file = new File([blob], filename, { type: blob.type || 'image/png' });
+      
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      const input = document.getElementById('xrayUpload');
+      input.files = dataTransfer.files;
+      
+      previewXray(input);
+    } catch(err) {
+      console.error('Error loading sample xray', err);
+    }
+  }
+</script>
+
+<%- include('partials/footer') %>

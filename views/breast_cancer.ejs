@@ -1,0 +1,327 @@
+<%- include('partials/header') %>
+
+<div class="row justify-content-center">
+  <div class="col-lg-11 col-xl-10">
+
+    <div class="med-page-header">
+      <div class="med-page-badge" style="background: #fce7f3; border-color: #fbcfe8; color: #db2777;">
+        <i class="fa-solid fa-ribbon"></i> Oncology Cytopathology Predictor
+      </div>
+      <h1 class="med-page-title">Breast Mass Cytopathology Assessment</h1>
+      <p class="med-page-desc">
+        Computes malignant risk from Fine Needle Aspirate (FNA) digitized cell nucleus morphometric descriptors.
+      </p>
+    </div>
+
+    <div class="med-card">
+      <!-- Preset Toolbar -->
+      <div class="preset-toolbar">
+        <div class="preset-toolbar-title">
+          <i class="fa-solid fa-wand-magic-sparkles text-primary"></i> Preset Cytology Samples:
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn-med-secondary" onclick="fillBenign()">
+            <i class="fa-solid fa-shield-check text-success"></i> Benign Sample
+          </button>
+          <button type="button" class="btn-med-secondary" onclick="fillMalignant()">
+            <i class="fa-solid fa-triangle-exclamation text-danger"></i> Malignant Sample
+          </button>
+        </div>
+      </div>
+
+      <form id="cancerForm" class="form-horizontal" action="/predict" method="POST">
+        
+        <!-- Section 1: Mean Measurements -->
+        <h5 class="text-dark font-weight-bold mb-3 d-flex align-items-center" style="font-size: 15px;">
+          <span class="badge badge-light border mr-2 text-primary" style="font-size: 11px;">Part 1</span>
+          Nuclear Feature Means
+        </h5>
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="texture_mean">
+                <span>Texture Mean</span>
+                <span class="unit">std dev</span>
+              </label>
+              <input id="texture_mean" class="form-control" type="number" step="any" name="texture_mean" placeholder="e.g. 14.5" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="smoothness_mean">
+                <span>Smoothness Mean</span>
+                <span class="unit">radius var</span>
+              </label>
+              <input id="smoothness_mean" class="form-control" type="number" step="any" name="smoothness_mean" placeholder="e.g. 0.085" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="compactness_mean">
+                <span>Compactness Mean</span>
+                <span class="unit">ratio</span>
+              </label>
+              <input id="compactness_mean" class="form-control" type="number" step="any" name="compactness_mean" placeholder="e.g. 0.065" required>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="concave_points_mean">
+                <span>Concave Points Mean</span>
+                <span class="unit">count</span>
+              </label>
+              <input id="concave_points_mean" class="form-control" type="number" step="any" name="concave points_mean" placeholder="e.g. 0.025" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="symmetry_mean">
+                <span>Symmetry Mean</span>
+                <span class="unit">index</span>
+              </label>
+              <input id="symmetry_mean" class="form-control" type="number" step="any" name="symmetry_mean" placeholder="e.g. 0.17" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="fractal_dimension_mean">
+                <span>Fractal Dimension Mean</span>
+                <span class="unit">coastline</span>
+              </label>
+              <input id="fractal_dimension_mean" class="form-control" type="number" step="any" name="fractal_dimension_mean" placeholder="e.g. 0.058" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Standard Errors -->
+        <h5 class="text-dark font-weight-bold mb-3 d-flex align-items-center" style="font-size: 15px;">
+          <span class="badge badge-light border mr-2 text-primary" style="font-size: 11px;">Part 2</span>
+          Standard Errors (SE)
+        </h5>
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="texture_se">
+                <span>Texture SE</span>
+                <span class="unit">std err</span>
+              </label>
+              <input id="texture_se" class="form-control" type="number" step="any" name="texture_se" placeholder="e.g. 0.95" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="area_se">
+                <span>Area SE</span>
+                <span class="unit">std err</span>
+              </label>
+              <input id="area_se" class="form-control" type="number" step="any" name="area_se" placeholder="e.g. 25.5" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="smoothness_se">
+                <span>Smoothness SE</span>
+                <span class="unit">std err</span>
+              </label>
+              <input id="smoothness_se" class="form-control" type="number" step="any" name="smoothness_se" placeholder="e.g. 0.005" required>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="compactness_se">
+                <span>Compactness SE</span>
+                <span class="unit">std err</span>
+              </label>
+              <input id="compactness_se" class="form-control" type="number" step="any" name="compactness_se" placeholder="e.g. 0.015" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="concavity_se">
+                <span>Concavity SE</span>
+                <span class="unit">std err</span>
+              </label>
+              <input id="concavity_se" class="form-control" type="number" step="any" name="concavity_se" placeholder="e.g. 0.02" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="concave_points_se">
+                <span>Concave Points SE</span>
+                <span class="unit">std err</span>
+              </label>
+              <input id="concave_points_se" class="form-control" type="number" step="any" name="concave points_se" placeholder="e.g. 0.008" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="symmetry_se">
+                <span>Symmetry SE</span>
+                <span class="unit">std err</span>
+              </label>
+              <input id="symmetry_se" class="form-control" type="number" step="any" name="symmetry_se" placeholder="e.g. 0.015" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="fractal_dimension_se">
+                <span>Fractal Dimension SE</span>
+                <span class="unit">std err</span>
+              </label>
+              <input id="fractal_dimension_se" class="form-control" type="number" step="any" name="fractal_dimension_se" placeholder="e.g. 0.002" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Worst Measurements -->
+        <h5 class="text-dark font-weight-bold mb-3 d-flex align-items-center" style="font-size: 15px;">
+          <span class="badge badge-light border mr-2 text-primary" style="font-size: 11px;">Part 3</span>
+          Worst / Extreme Morphology
+        </h5>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="texture_worst">
+                <span>Texture Worst</span>
+                <span class="unit">peak</span>
+              </label>
+              <input id="texture_worst" class="form-control" type="number" step="any" name="texture_worst" placeholder="e.g. 18.2" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="area_worst">
+                <span>Area Worst</span>
+                <span class="unit">peak</span>
+              </label>
+              <input id="area_worst" class="form-control" type="number" step="any" name="area_worst" placeholder="e.g. 520.0" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="smoothness_worst">
+                <span>Smoothness Worst</span>
+                <span class="unit">peak</span>
+              </label>
+              <input id="smoothness_worst" class="form-control" type="number" step="any" name="smoothness_worst" placeholder="e.g. 0.12" required>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="compactness_worst">
+                <span>Compactness Worst</span>
+                <span class="unit">peak</span>
+              </label>
+              <input id="compactness_worst" class="form-control" type="number" step="any" name="compactness_worst" placeholder="e.g. 0.15" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="concavity_worst">
+                <span>Concavity Worst</span>
+                <span class="unit">peak</span>
+              </label>
+              <input id="concavity_worst" class="form-control" type="number" step="any" name="concavity_worst" placeholder="e.g. 0.16" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="concave_points_worst">
+                <span>Concave Points Worst</span>
+                <span class="unit">peak</span>
+              </label>
+              <input id="concave_points_worst" class="form-control" type="number" step="any" name="concave points_worst" placeholder="e.g. 0.07" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="symmetry_worst">
+                <span>Symmetry Worst</span>
+                <span class="unit">peak</span>
+              </label>
+              <input id="symmetry_worst" class="form-control" type="number" step="any" name="symmetry_worst" placeholder="e.g. 0.25" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="fractal_dimension_worst">
+                <span>Fractal Dimension Worst</span>
+                <span class="unit">peak</span>
+              </label>
+              <input id="fractal_dimension_worst" class="form-control" type="number" step="any" name="fractal_dimension_worst" placeholder="e.g. 0.07" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-top d-flex align-items-center justify-content-between">
+          <a href="/" class="btn-med-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back to Directory
+          </a>
+          <button type="submit" class="btn-med-primary">
+            <i class="fa-solid fa-microscope"></i> Analyze Cytopathology
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function fillBenign() {
+    document.getElementById('texture_mean').value = '14.2';
+    document.getElementById('smoothness_mean').value = '0.082';
+    document.getElementById('compactness_mean').value = '0.045';
+    document.getElementById('concave_points_mean').value = '0.018';
+    document.getElementById('symmetry_mean').value = '0.165';
+    document.getElementById('fractal_dimension_mean').value = '0.055';
+    document.getElementById('texture_se').value = '0.92';
+    document.getElementById('area_se').value = '21.0';
+    document.getElementById('smoothness_se').value = '0.005';
+    document.getElementById('compactness_se').value = '0.012';
+    document.getElementById('concavity_se').value = '0.015';
+    document.getElementById('concave_points_se').value = '0.007';
+    document.getElementById('symmetry_se').value = '0.018';
+    document.getElementById('fractal_dimension_se').value = '0.002';
+    document.getElementById('texture_worst').value = '17.8';
+    document.getElementById('area_worst').value = '480.0';
+    document.getElementById('smoothness_worst').value = '0.11';
+    document.getElementById('compactness_worst').value = '0.12';
+    document.getElementById('concavity_worst').value = '0.14';
+    document.getElementById('concave_points_worst').value = '0.06';
+    document.getElementById('symmetry_worst').value = '0.24';
+    document.getElementById('fractal_dimension_worst').value = '0.07';
+  }
+
+  function fillMalignant() {
+    document.getElementById('texture_mean').value = '24.5';
+    document.getElementById('smoothness_mean').value = '0.12';
+    document.getElementById('compactness_mean').value = '0.21';
+    document.getElementById('concave_points_mean').value = '0.089';
+    document.getElementById('symmetry_mean').value = '0.22';
+    document.getElementById('fractal_dimension_mean').value = '0.075';
+    document.getElementById('texture_se').value = '1.85';
+    document.getElementById('area_se').value = '84.0';
+    document.getElementById('smoothness_se').value = '0.012';
+    document.getElementById('compactness_se').value = '0.045';
+    document.getElementById('concavity_se').value = '0.055';
+    document.getElementById('concave_points_se').value = '0.021';
+    document.getElementById('symmetry_se').value = '0.032';
+    document.getElementById('fractal_dimension_se').value = '0.006';
+    document.getElementById('texture_worst').value = '34.2';
+    document.getElementById('area_worst').value = '1450.0';
+    document.getElementById('smoothness_worst').value = '0.18';
+    document.getElementById('compactness_worst').value = '0.45';
+    document.getElementById('concavity_worst').value = '0.62';
+    document.getElementById('concave_points_worst').value = '0.22';
+    document.getElementById('symmetry_worst').value = '0.38';
+    document.getElementById('fractal_dimension_worst').value = '0.11';
+  }
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,557 @@
+<%- include('partials/header') %>
+
+<% if (typeof message !== 'undefined' && message) { %>
+<div class="alert alert-danger d-flex align-items-center mb-4" role="alert" style="border-radius: 12px; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; padding: 14px 18px;">
+    <i class="fa-solid fa-triangle-exclamation mr-2" style="font-size: 18px;"></i>
+    <div><strong>Notice:</strong> <%= message %></div>
+</div>
+<% } %>
+
+<style>
+  /* Home Viewport Architecture */
+  .hero-banner {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0369a1 100%);
+    border-radius: 20px;
+    padding: 48px 40px;
+    color: #ffffff;
+    margin-bottom: 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  }
+
+  .hero-banner::after {
+    content: "";
+    position: absolute;
+    right: -40px;
+    bottom: -40px;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #bae6fd;
+    margin-bottom: 18px;
+  }
+
+  .hero-title {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+    max-width: 780px;
+  }
+
+  .hero-subtitle {
+    font-size: 16px;
+    line-height: 1.65;
+    color: #cbd5e1;
+    max-width: 660px;
+    margin-bottom: 24px;
+  }
+
+  .hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .hero-stat-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-stat-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .hero-stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+  }
+
+  /* Diagnostic Grid Cards */
+  .diagnostic-card {
+    background: #ffffff;
+    border: 1px solid var(--slate-200);
+    border-radius: 16px;
+    padding: 24px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+
+  .diagnostic-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary-border);
+    box-shadow: 0 12px 24px rgba(2, 132, 199, 0.08);
+  }
+
+  .diag-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .diag-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+
+  .diag-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--slate-500);
+    margin-bottom: 16px;
+    flex-grow: 1;
+  }
+
+  .diag-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--slate-100);
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+
+  .diag-accuracy {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .diag-type {
+    color: var(--slate-400);
+  }
+
+  /* Benchmark Grid */
+  .benchmark-strip {
+    background: #ffffff;
+    border: 1px solid var(--slate-200);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 36px;
+  }
+
+  .benchmark-card {
+    text-align: center;
+    padding: 12px;
+  }
+
+  .benchmark-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--navy);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .benchmark-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--slate-500);
+    margin-top: 4px;
+  }
+
+  /* Educational Condition Cards */
+  .condition-card {
+    background: #ffffff;
+    border: 1px solid var(--slate-200);
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 20px;
+    height: 100%;
+  }
+
+  .condition-card h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .condition-card p {
+    font-size: 13px;
+    color: var(--slate-600);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .symptom-tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .symptom-tag {
+    font-size: 11px;
+    background: var(--slate-100);
+    color: var(--slate-700);
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--slate-200);
+  }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-banner">
+  <h1 class="hero-title">
+    Intelligent Disease Risk Assessment &amp; Clinical Diagnostics
+  </h1>
+  <p class="hero-subtitle">
+    MEDORA offers a unified predictive disease intelligence environment equipped with 7 trained machine learning and deep convolutional models for clinical feature analysis.
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat-item">
+      <span class="hero-stat-value">7 Models</span>
+      <span class="hero-stat-label">Diagnostic Coverage</span>
+    </div>
+    <div class="hero-stat-item">
+      <span class="hero-stat-value">91%–99%</span>
+      <span class="hero-stat-label">Model Accuracy</span>
+    </div>
+    <div class="hero-stat-item">
+      <span class="hero-stat-value">&lt; 100ms</span>
+      <span class="hero-stat-label">Inference Latency</span>
+    </div>
+    <div class="hero-stat-item">
+      <span class="hero-stat-value">Client-Side</span>
+      <span class="hero-stat-label">Privacy Preserving</span>
+    </div>
+  </div>
+</div>
+
+<!-- Section: Model Directory -->
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h2 class="h4 font-weight-bold text-dark mb-1">Diagnostic Modalities</h2>
+    <p class="text-muted mb-0" style="font-size: 14px;">Select a clinical predictor to input patient biomarkers or upload diagnostic imagery.</p>
+  </div>
+</div>
+
+<div class="row">
+  <!-- 1. Diabetes -->
+  <div class="col-lg-4 col-md-6 mb-4">
+    <div class="diagnostic-card">
+      <div class="diag-icon-wrapper" style="background: #e0f2fe; color: #0284c7;">
+        <i class="fa-solid fa-droplet"></i>
+      </div>
+      <h3 class="diag-title">Diabetes Mellitus</h3>
+      <p class="diag-desc">
+        Evaluates fasting glucose, insulin levels, BMI, and genetic pedigree to detect diabetic pathology risk.
+      </p>
+      <div class="diag-meta">
+        <span class="diag-type">8 Clinical Biomarkers</span>
+        <span class="diag-accuracy">92.54% Acc</span>
+      </div>
+      <a href="/diabetes" class="btn btn-med-primary w-100">
+        Launch Predictor <i class="fa-solid fa-arrow-right ml-1"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- 2. Breast Cancer -->
+  <div class="col-lg-4 col-md-6 mb-4">
+    <div class="diagnostic-card">
+      <div class="diag-icon-wrapper" style="background: #fce7f3; color: #db2777;">
+        <i class="fa-solid fa-ribbon"></i>
+      </div>
+      <h3 class="diag-title">Breast Cancer Risk</h3>
+      <p class="diag-desc">
+        Processes fine needle aspirate (FNA) cell nucleus morphometry, concave points, texture, and compactness.
+      </p>
+      <div class="diag-meta">
+        <span class="diag-type">22 Biopsy Metrics</span>
+        <span class="diag-accuracy">97.66% Acc</span>
+      </div>
+      <a href="/cancer" class="btn btn-med-primary w-100">
+        Launch Predictor <i class="fa-solid fa-arrow-right ml-1"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- 3. Heart Disease -->
+  <div class="col-lg-4 col-md-6 mb-4">
+    <div class="diagnostic-card">
+      <div class="diag-icon-wrapper" style="background: #fee2e2; color: #dc2626;">
+        <i class="fa-solid fa-heart-pulse"></i>
+      </div>
+      <h3 class="diag-title">Cardiovascular Health</h3>
+      <p class="diag-desc">
+        Assesses resting blood pressure, serum cholesterol, exercise angina, ST depression, and fluoroscopy vessels.
+      </p>
+      <div class="diag-meta">
+        <span class="diag-type">13 Cardiac Features</span>
+        <span class="diag-accuracy">98.70% Acc</span>
+      </div>
+      <a href="/heart" class="btn btn-med-primary w-100">
+        Launch Predictor <i class="fa-solid fa-arrow-right ml-1"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- 4. Kidney Disease -->
+  <div class="col-lg-4 col-md-6 mb-4">
+    <div class="diagnostic-card">
+      <div class="diag-icon-wrapper" style="background: #fef3c7; color: #d97706;">
+        <i class="fa-solid fa-cubes"></i>
+      </div>
+      <h3 class="diag-title">Chronic Kidney Disease</h3>
+      <p class="diag-desc">
+        Screens specific gravity, albuminuria, serum creatinine, blood urea, and urinalysis cell counts for renal impairment.
+      </p>
+      <div class="diag-meta">
+        <span class="diag-type">24 Renal Indicators</span>
+        <span class="diag-accuracy">99.16% Acc</span>
+      </div>
+      <a href="/kidney" class="btn btn-med-primary w-100">
+        Launch Predictor <i class="fa-solid fa-arrow-right ml-1"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- 5. Liver Disease -->
+  <div class="col-lg-4 col-md-6 mb-4">
+    <div class="diagnostic-card">
+      <div class="diag-icon-wrapper" style="background: #dcfce7; color: #16a34a;">
+        <i class="fa-solid fa-shield"></i>
+      </div>
+      <h3 class="diag-title">Hepatic Impairment</h3>
+      <p class="diag-desc">
+        Calculates liver status using conjugated bilirubin, alkaline phosphatase, aminotransferases, and A/G ratio.
+      </p>
+      <div class="diag-meta">
+        <span class="diag-type">10 Hepatic Enzymes</span>
+        <span class="diag-accuracy">71.18% Acc</span>
+      </div>
+      <a href="/liver" class="btn btn-med-primary w-100">
+        Launch Predictor <i class="fa-solid fa-arrow-right ml-1"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- 6. Malaria Vision -->
+  <div class="col-lg-4 col-md-6 mb-4">
+    <div class="diagnostic-card">
+      <div class="diag-icon-wrapper" style="background: #ede9fe; color: #7c3aed;">
+        <i class="fa-solid fa-microscope"></i>
+      </div>
+      <h3 class="diag-title">Malaria Cell Vision</h3>
+      <p class="diag-desc">
+        Deep CNN model analyzes Giemsa-stained thin blood smear cell micrographs to identify Plasmodium parasitism.
+      </p>
+      <div class="diag-meta">
+        <span class="diag-type">Cell Smear Micrograph</span>
+        <span class="diag-accuracy">95.65% Acc</span>
+      </div>
+      <a href="/malaria" class="btn btn-med-primary w-100">
+        Launch Predictor <i class="fa-solid fa-arrow-right ml-1"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- 7. Pneumonia Vision -->
+  <div class="col-lg-4 col-md-6 mb-4">
+    <div class="diagnostic-card">
+      <div class="diag-icon-wrapper" style="background: #ccfbf1; color: #0d9488;">
+        <i class="fa-solid fa-lungs"></i>
+      </div>
+      <h3 class="diag-title">Pneumonia Radiograph</h3>
+      <p class="diag-desc">
+        Convolutional vision pipeline screens anterior-posterior chest X-ray images for pulmonary consolidations.
+      </p>
+      <div class="diag-meta">
+        <span class="diag-type">Chest Radiograph (X-Ray)</span>
+        <span class="diag-accuracy">91.35% Acc</span>
+      </div>
+      <a href="/pneumonia" class="btn btn-med-primary w-100">
+        Launch Predictor <i class="fa-solid fa-arrow-right ml-1"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Benchmark Statistics Strip -->
+<div class="benchmark-strip">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h3 class="h6 font-weight-bold text-dark mb-0">Benchmark Performance Summary</h3>
+      <span class="text-muted" style="font-size: 12px;">Validated on independent clinical validation cohorts</span>
+    </div>
+    <span class="badge badge-light border text-muted" style="font-size: 11px; padding: 6px 10px;">Ensemble &amp; CNN</span>
+  </div>
+  <div class="row">
+    <div class="col-6 col-md-3 col-lg-2">
+      <div class="benchmark-card">
+        <div class="benchmark-num text-primary">99.16%</div>
+        <div class="benchmark-label">Kidney Disease</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg-2">
+      <div class="benchmark-card">
+        <div class="benchmark-num text-primary">98.70%</div>
+        <div class="benchmark-label">Heart Disease</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg-2">
+      <div class="benchmark-card">
+        <div class="benchmark-num text-primary">97.66%</div>
+        <div class="benchmark-label">Breast Cancer</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg-2">
+      <div class="benchmark-card">
+        <div class="benchmark-num text-primary">95.65%</div>
+        <div class="benchmark-label">Malaria Vision</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg-2">
+      <div class="benchmark-card">
+        <div class="benchmark-num text-primary">92.54%</div>
+        <div class="benchmark-label">Diabetes</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg-2">
+      <div class="benchmark-card">
+        <div class="benchmark-num text-primary">91.35%</div>
+        <div class="benchmark-label">Pneumonia</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Clinical Knowledge Guide -->
+<div class="mb-4">
+  <h2 class="h4 font-weight-bold text-dark mb-1">Pathology &amp; Symptomatology Guide</h2>
+  <p class="text-muted mb-4" style="font-size: 14px;">Reference guide to clinical presentations and warning signs for tracked conditions.</p>
+
+  <div class="row">
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="condition-card">
+        <h4><i class="fa-solid fa-droplet text-primary"></i> Diabetes Mellitus</h4>
+        <p>
+          Characterized by chronic hyperglycemia resulting from defects in insulin secretion, insulin action, or both. Long-term microvascular and macrovascular risks require early intervention.
+        </p>
+        <div class="symptom-tag-container">
+          <span class="symptom-tag">Polydipsia</span>
+          <span class="symptom-tag">Polyuria</span>
+          <span class="symptom-tag">Weight loss</span>
+          <span class="symptom-tag">Blurred vision</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="condition-card">
+        <h4><i class="fa-solid fa-heart-pulse text-danger"></i> Cardiovascular Disease</h4>
+        <p>
+          Encompasses ischemic coronary disorders, hypertensive crises, and conduction defects. Risk accelerates in the presence of elevated LDL, hypertension, and reduced myocardial perfusion.
+        </p>
+        <div class="symptom-tag-container">
+          <span class="symptom-tag">Angina pectoris</span>
+          <span class="symptom-tag">Dyspnea</span>
+          <span class="symptom-tag">Diaphoresis</span>
+          <span class="symptom-tag">Palpitations</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="condition-card">
+        <h4><i class="fa-solid fa-ribbon text-pink" style="color: #db2777;"></i> Breast Cancer</h4>
+        <p>
+          Malignant proliferation of epithelial cells lining ducts or lobules. Computer-aided cytological FNA classification distinguishes benign fibroadenomas from malignant carcinoma.
+        </p>
+        <div class="symptom-tag-container">
+          <span class="symptom-tag">Palpable lump</span>
+          <span class="symptom-tag">Skin dimpling</span>
+          <span class="symptom-tag">Nipple retraction</span>
+          <span class="symptom-tag">Architectural distortion</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="condition-card">
+        <h4><i class="fa-solid fa-cubes text-warning"></i> Chronic Kidney Disease</h4>
+        <p>
+          Progressive decline in glomerular filtration rate (GFR). Pathological elevation of serum creatinine, proteinuria, and electrolyte imbalances mark progressive stages.
+        </p>
+        <div class="symptom-tag-container">
+          <span class="symptom-tag">Peripheral edema</span>
+          <span class="symptom-tag">Proteinuria</span>
+          <span class="symptom-tag">Hypertension</span>
+          <span class="symptom-tag">Fatigue</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="condition-card">
+        <h4><i class="fa-solid fa-shield text-success"></i> Chronic Liver Disease</h4>
+        <p>
+          Hepatic parenchyma deterioration driven by viral, alcoholic, or metabolic steatohepatitis. Marked by elevated transaminases, altered bilirubin excretion, and hypoalbuminemia.
+        </p>
+        <div class="symptom-tag-container">
+          <span class="symptom-tag">Jaundice</span>
+          <span class="symptom-tag">Hepatomegaly</span>
+          <span class="symptom-tag">Pruritus</span>
+          <span class="symptom-tag">Abdominal distension</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="condition-card">
+        <h4><i class="fa-solid fa-lungs text-info"></i> Pulmonary Consolidations</h4>
+        <p>
+          Acute lower respiratory infection causing alveolar exudate accumulation. Manifests on radiographic imaging as opacities, air bronchograms, and silhouette signs.
+        </p>
+        <div class="symptom-tag-container">
+          <span class="symptom-tag">Productive cough</span>
+          <span class="symptom-tag">Pyrexia</span>
+          <span class="symptom-tag">Tachypnea</span>
+          <span class="symptom-tag">Pleuritic chest pain</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

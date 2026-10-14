@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MEDORA - Predictive Disease Intelligence Through Data-Driven Clinical Feature Analysis">
+  <meta name="og:title" content="MEDORA - Predictive Disease Intelligence">
+  <meta name="og:image" content="/static/favicon.ico">
+  <title><%= typeof title !== 'undefined' ? title : 'MEDORA | Predictive Disease Intelligence' %></title>
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico?v=2" />
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap CSS & Font Awesome Icons -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  
+  <!-- jQuery, Popper.js, and Bootstrap JS for interactive components -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  
+  <!-- Global Professional Medical Theme CSS -->
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-light: #f0f9ff;
+      --primary-border: #bae6fd;
+      --navy: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --success: #059669;
+      --success-light: #ecfdf5;
+      --danger: #dc2626;
+      --danger-light: #fef2f2;
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      min-height: 100%;
+      margin: 0;
+      font-family: var(--font-main);
+      background-color: var(--slate-50);
+      color: var(--slate-700);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      padding-top: 74px;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1 0 auto;
+      padding: 32px 0 60px;
+    }
+
+    /* Professional Top Navigation */
+    .med-navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--slate-200);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+      padding: 10px 0;
+      transition: all 0.2s ease;
+    }
+
+    .med-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none !important;
+      color: var(--navy) !important;
+    }
+
+    .med-brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+    }
+
+    .med-brand-text {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--navy);
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .med-brand-sub {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--primary);
+    }
+
+    .navbar-nav .nav-link {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate-600) !important;
+      padding: 8px 14px !important;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: var(--primary) !important;
+      background-color: var(--slate-100);
+    }
+
+    .navbar-nav .nav-item.active .nav-link,
+    .navbar-nav .nav-link.active {
+      color: var(--primary) !important;
+      background-color: var(--primary-light);
+    }
+
+    /* Mobile Navbar Dropdown Styling */
+    @media (max-width: 1199.98px) {
+      .navbar-collapse {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 16px;
+        margin-top: 12px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+        border: 1px solid var(--slate-200);
+      }
+      .navbar-collapse .nav-item {
+        margin-bottom: 4px;
+      }
+      .navbar-collapse .nav-link {
+        padding: 10px 14px !important;
+      }
+    }
+
+    /* Professional Card styling */
+    .med-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.03);
+      padding: 32px;
+      margin-bottom: 24px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    /* Clean Form Elements */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .med-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-700);
+      margin-bottom: 6px;
+    }
+
+    .med-label .unit {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--slate-400);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .form-control {
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--navy);
+      transition: all 0.2s ease;
+      height: 44px;
+    }
+
+    .form-control:focus {
+      background-color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+      outline: none;
+      color: var(--navy);
+    }
+
+    .form-control::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    /* Buttons */
+    .btn-med-primary {
+      background-color: var(--primary);
+      border: 1px solid var(--primary);
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+      cursor: pointer;
+    }
+
+    .btn-med-primary:hover, .btn-med-primary:focus {
+      background-color: var(--primary-hover);
+      border-color: var(--primary-hover);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+
+    .btn-med-secondary {
+      background-color: #ffffff;
+      border: 1px solid var(--slate-200);
+      color: var(--slate-700);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-med-secondary:hover {
+      background-color: var(--slate-100);
+      color: var(--navy);
+      border-color: #cbd5e1;
+    }
+
+    /* Sample fill preset toolbar */
+    .preset-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: var(--slate-100);
+      border: 1px solid var(--slate-200);
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-bottom: 24px;
+    }
+
+    .preset-toolbar-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--slate-600);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Page Header */
+    .med-page-header {
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .med-page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      letter-spacing: 0.3px;
+    }
+
+    .med-page-title {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.7px;
+      margin-bottom: 8px;
+    }
+
+    .med-page-desc {
+      font-size: 15px;
+      color: var(--slate-500);
+      max-width: 640px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Professional footer */
+    .med-footer {
+      background: #ffffff;
+      border-top: 1px solid var(--slate-200);
+      padding: 28px 0;
+      font-size: 13px;
+      color: var(--slate-500);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top med-navbar">
+    <div class="container-fluid px-lg-4">
+      <a class="navbar-brand med-brand" href="/">
+        <div class="med-brand-icon">
+          <i class="fa-solid fa-heart-pulse"></i>
+        </div>
+        <div class="med-brand-text">
+          MEDORA
+          <span class="med-brand-sub">Disease Intelligence</span>
+        </div>
+      </a>
+
+      <button class="navbar-toggler border-0 p-2" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" style="outline: none; box-shadow: none; cursor: pointer;">
+        <i class="fa-solid fa-bars text-dark" style="font-size: 22px;"></i>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav ml-auto align-items-xl-center">
+          <li class="nav-item <%= (typeof currentPath !== 'undefined' && currentPath === '/') ? 'active' : '' %>">
+            <a class="nav-link" href="/"><i class="fa-solid fa-house mr-1 text-slate-400"></i> Home</a>
+          </li>
+          <li class="nav-item <%= (typeof currentPath !== 'undefined' && currentPath === '/diabetes') ? 'active' : '' %>">
+            <a class="nav-link" href="/diabetes"><i class="fa-solid fa-droplet mr-1 text-slate-400"></i> Diabetes</a>
+          </li>
+          <li class="nav-item <%= (typeof currentPath !== 'undefined' && currentPath === '/cancer') ? 'active' : '' %>">
+            <a class="nav-link" href="/cancer"><i class="fa-solid fa-ribbon mr-1 text-slate-400"></i> Breast Cancer</a>
+          </li>
+          <li class="nav-item <%= (typeof currentPath !== 'undefined' && currentPath === '/heart') ? 'active' : '' %>">
+            <a class="nav-link" href="/heart"><i class="fa-solid fa-heart mr-1 text-slate-400"></i> Heart</a>
+          </li>
+          <li class="nav-item <%= (typeof currentPath !== 'undefined' && currentPath === '/kidney') ? 'active' : '' %>">
+            <a class="nav-link" href="/kidney"><i class="fa-solid fa-cubes mr-1 text-slate-400"></i> Kidney</a>
+          </li>
+          <li class="nav-item <%= (typeof currentPath !== 'undefined' && currentPath === '/liver') ? 'active' : '' %>">
+            <a class="nav-link" href="/liver"><i class="fa-solid fa-shield mr-1 text-slate-400"></i> Liver</a>
+          </li>
+          <li class="nav-item <%= (typeof currentPath !== 'undefined' && currentPath === '/malaria') ? 'active' : '' %>">
+            <a class="nav-link" href="/malaria"><i class="fa-solid fa-microscope mr-1 text-slate-400"></i> Malaria</a>
+          </li>
+          <li class="nav-item <%= (typeof currentPath !== 'undefined' && currentPath === '/pneumonia') ? 'active' : '' %>">
+            <a class="nav-link" href="/pneumonia"><i class="fa-solid fa-lungs mr-1 text-slate-400"></i> Pneumonia</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var toggler = document.querySelector('.navbar-toggler');
+      var collapse = document.getElementById('mainNavbar');
+      if (toggler && collapse) {
+        toggler.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var isExpanded = collapse.classList.contains('show');
+          if (isExpanded) {
+            collapse.classList.remove('show');
+            toggler.setAttribute('aria-expanded', 'false');
+          } else {
+            collapse.classList.add('show');
+            toggler.setAttribute('aria-expanded', 'true');
+          }
+        });
+
+        // Close dropdown when clicking any nav link
+        var navLinks = collapse.querySelectorAll('.nav-link');
+        navLinks.forEach(function(link) {
+          link.addEventListener('click', function() {
+            if (collapse.classList.contains('show')) {
+              collapse.classList.remove('show');
+              toggler.setAttribute('aria-expanded', 'false');
+            }
+          });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+          if (!collapse.contains(event.target) && !toggler.contains(event.target)) {
+            if (collapse.classList.contains('show')) {
+              collapse.classList.remove('show');
+              toggler.setAttribute('aria-expanded', 'false');
+            }
+          }
+        });
+      }
+    });
+  </script>
+
+  <!-- Main Viewport Content -->
+  <main>
+    <div class="container">

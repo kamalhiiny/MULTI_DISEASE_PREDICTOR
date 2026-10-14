@@ -1,0 +1,136 @@
+<%- include('partials/header') %>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-xl-7">
+
+    <div class="med-page-header">
+      <div class="med-page-badge" style="background: #ede9fe; border-color: #ddd6fe; color: #7c3aed;">
+        <i class="fa-solid fa-microscope"></i> Pathology Computer Vision
+      </div>
+      <h1 class="med-page-title">Malaria Parasitemia Cell Classifier</h1>
+      <p class="med-page-desc">
+        Deep convolutional neural network analyzes Giemsa-stained thin blood smear erythrocytes to detect Plasmodium falciparum ring-stage parasites.
+      </p>
+    </div>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+      <div class="alert alert-danger d-flex align-items-center mb-4" role="alert" style="border-radius: 12px; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; padding: 14px 18px;">
+        <i class="fa-solid fa-triangle-exclamation mr-2" style="font-size: 18px;"></i>
+        <div><%= message %></div>
+      </div>
+    <% } %>
+
+    <div class="med-card">
+      <form class="form-horizontal" action="/malariapredict" method="POST" enctype="multipart/form-data">
+        
+        <!-- Upload Dropzone -->
+        <div class="upload-dropzone p-4 text-center mb-4" style="border: 2px dashed #cbd5e1; border-radius: 16px; background: #f8fafc; transition: all 0.2s ease;">
+          <input id="imageUpload" type="file" name="image" accept="image/*" class="d-none" onchange="previewImage(this)" required>
+          
+          <div id="uploadPrompt" class="py-3">
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 14px;">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <h5 class="font-weight-bold text-dark mb-1" style="font-size: 16px;">Upload Blood Smear Micrograph</h5>
+            <p class="text-muted mb-3" style="font-size: 13px;">Drop cell image here, or click to browse files</p>
+            <button type="button" class="btn-med-secondary" onclick="document.getElementById('imageUpload').click()">
+              <i class="fa-solid fa-folder-open"></i> Browse Files
+            </button>
+            <div class="text-muted mt-2" style="font-size: 11px;">Supported formats: PNG, JPG, JPEG (128x128px recommended)</div>
+          </div>
+
+          <!-- Preview Area -->
+          <div id="previewArea" class="d-none mt-2">
+            <div class="position-relative d-inline-block">
+              <img id="imagePreview" src="#" alt="Cell Micrograph Preview" style="max-height: 240px; border-radius: 12px; border: 1px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.06); object-fit: contain;">
+              <button type="button" class="btn btn-sm btn-danger position-absolute" style="top: -10px; right: -10px; border-radius: 50%; width: 28px; height: 28px; padding: 0;" onclick="removeImage()">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div id="fileName" class="text-dark font-weight-bold mt-2" style="font-size: 13px;"></div>
+          </div>
+        </div>
+
+        <!-- Sample Test Cell Strip -->
+        <div class="mb-4 p-3" style="background: #f1f5f9; border-radius: 12px; border: 1px solid #e2e8f0;">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="font-weight-bold text-dark" style="font-size: 12px;">Quick Test with Dataset Samples:</span>
+            <span class="text-muted" style="font-size: 11px;">Click to load</span>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <button type="button" class="btn btn-sm btn-white w-100 border text-left d-flex align-items-center gap-2" style="background: #fff; font-size: 12px; padding: 8px 12px; border-radius: 8px;" onclick="loadSampleImage('/test_images/malaria/C1_thinF_IMG_20150604_104722_cell_73.png', 'C1_thinF_IMG_20150604_104722_cell_73.png')">
+                <img src="/test_images/malaria/C1_thinF_IMG_20150604_104722_cell_73.png" style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover;" alt="Sample 1">
+                <div>
+                  <div class="font-weight-bold text-dark">Parasitized Cell</div>
+                  <div class="text-muted" style="font-size: 10px;">Sample 1 (Positive)</div>
+                </div>
+              </button>
+            </div>
+            <div class="col-6">
+              <button type="button" class="btn btn-sm btn-white w-100 border text-left d-flex align-items-center gap-2" style="background: #fff; font-size: 12px; padding: 8px 12px; border-radius: 8px;" onclick="loadSampleImage('/test_images/malaria/C33P1thinF_IMG_20150619_114756a_cell_181.png', 'C33P1thinF_IMG_20150619_114756a_cell_181.png')">
+                <img src="/test_images/malaria/C33P1thinF_IMG_20150619_114756a_cell_181.png" style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover;" alt="Sample 2">
+                <div>
+                  <div class="font-weight-bold text-dark">Infected Erythrocyte</div>
+                  <div class="text-muted" style="font-size: 10px;">Sample 2 (Positive)</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+          <a href="/" class="btn-med-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back to Directory
+          </a>
+          <button type="submit" class="btn-med-primary">
+            <i class="fa-solid fa-microscope"></i> Classify Cell Micrograph
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function previewImage(input) {
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('imagePreview').src = e.target.result;
+        document.getElementById('fileName').innerText = file.name;
+        document.getElementById('previewArea').classList.remove('d-none');
+        document.getElementById('uploadPrompt').classList.add('d-none');
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function removeImage() {
+    const input = document.getElementById('imageUpload');
+    input.value = '';
+    document.getElementById('previewArea').classList.add('d-none');
+    document.getElementById('uploadPrompt').classList.remove('d-none');
+  }
+
+  async function loadSampleImage(url, filename) {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const file = new File([blob], filename, { type: blob.type || 'image/png' });
+      
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      const input = document.getElementById('imageUpload');
+      input.files = dataTransfer.files;
+      
+      previewImage(input);
+    } catch(err) {
+      console.error('Error loading sample image', err);
+    }
+  }
+</script>
+
+<%- include('partials/footer') %>

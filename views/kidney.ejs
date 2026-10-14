@@ -1,0 +1,393 @@
+<%- include('partials/header') %>
+
+<div class="row justify-content-center">
+  <div class="col-lg-11 col-xl-10">
+
+    <div class="med-page-header">
+      <div class="med-page-badge" style="background: #fef3c7; border-color: #fde68a; color: #d97706;">
+        <i class="fa-solid fa-cubes"></i> Nephrology Diagnostic Suite
+      </div>
+      <h1 class="med-page-title">Chronic Kidney Disease (CKD) Predictor</h1>
+      <p class="med-page-desc">
+        Processes comprehensive renal biomarkers, urinalysis microscopic sediment, and systemic clinical indicators.
+      </p>
+    </div>
+
+    <div class="med-card">
+      <!-- Preset Toolbar -->
+      <div class="preset-toolbar">
+        <div class="preset-toolbar-title">
+          <i class="fa-solid fa-wand-magic-sparkles text-primary"></i> Preset Renal Profiles:
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn-med-secondary" onclick="fillHealthyKidney()">
+            <i class="fa-solid fa-check text-success"></i> Healthy Renal Panel
+          </button>
+          <button type="button" class="btn-med-secondary" onclick="fillRiskKidney()">
+            <i class="fa-solid fa-triangle-exclamation text-danger"></i> CKD Indicative Panel
+          </button>
+        </div>
+      </div>
+
+      <form id="kidneyForm" class="form-horizontal" action="/predict" method="POST">
+        
+        <!-- Section 1: Urinalysis & Vital Signs -->
+        <h5 class="text-dark font-weight-bold mb-3 d-flex align-items-center" style="font-size: 15px;">
+          <span class="badge badge-light border mr-2 text-primary" style="font-size: 11px;">Section 1</span>
+          Vitals &amp; Urinalysis
+        </h5>
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="age">
+                <span>Age</span>
+                <span class="unit">years</span>
+              </label>
+              <input id="age" class="form-control" type="number" step="any" min="1" name="age" placeholder="e.g. 48" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="blood_pressure">
+                <span>Blood Pressure</span>
+                <span class="unit">mm/Hg</span>
+              </label>
+              <input id="blood_pressure" class="form-control" type="number" step="any" name="blood_pressure" placeholder="e.g. 80" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="specific_gravity">
+                <span>Specific Gravity</span>
+                <span class="unit">e.g. 1.020</span>
+              </label>
+              <input id="specific_gravity" class="form-control" type="number" step="any" name="specific_gravity" placeholder="e.g. 1.020" required>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="albumin">
+                <span>Albumin</span>
+                <span class="unit">0 - 5 scale</span>
+              </label>
+              <select id="albumin" class="form-control" name="albumin" required>
+                <option value="0">0 - None</option>
+                <option value="1">1 - Trace / Mild</option>
+                <option value="2">2 - Moderate</option>
+                <option value="3">3 - High</option>
+                <option value="4">4 - Severe</option>
+                <option value="5">5 - Critical</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="sugar">
+                <span>Sugar</span>
+                <span class="unit">0 - 5 scale</span>
+              </label>
+              <select id="sugar" class="form-control" name="sugar" required>
+                <option value="0">0 - None</option>
+                <option value="1">1 - Low</option>
+                <option value="2">2 - Moderate</option>
+                <option value="3">3 - Elevated</option>
+                <option value="4">4 - High</option>
+                <option value="5">5 - Very High</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="red_blood_cells">
+                <span>Red Blood Cells</span>
+                <span class="unit">1: Normal · 0: Abn</span>
+              </label>
+              <select id="red_blood_cells" class="form-control" name="red_blood_cells" required>
+                <option value="1">1 - Normal</option>
+                <option value="0">0 - Abnormal</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="pus_cell">
+                <span>Pus Cell</span>
+                <span class="unit">1: Normal · 0: Abn</span>
+              </label>
+              <select id="pus_cell" class="form-control" name="pus_cell" required>
+                <option value="1">1 - Normal</option>
+                <option value="0">0 - Abnormal</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="pus_cell_clumps">
+                <span>Pus Cell Clumps</span>
+                <span class="unit">0: Not Present · 1: Present</span>
+              </label>
+              <select id="pus_cell_clumps" class="form-control" name="pus_cell_clumps" required>
+                <option value="0">0 - Not Present</option>
+                <option value="1">1 - Present</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="bacteria">
+                <span>Bacteria</span>
+                <span class="unit">0: Not Present · 1: Present</span>
+              </label>
+              <select id="bacteria" class="form-control" name="bacteria" required>
+                <option value="0">0 - Not Present</option>
+                <option value="1">1 - Present</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Blood Biochemistry & Electrolytes -->
+        <h5 class="text-dark font-weight-bold mb-3 d-flex align-items-center" style="font-size: 15px;">
+          <span class="badge badge-light border mr-2 text-primary" style="font-size: 11px;">Section 2</span>
+          Serum Biochemistry &amp; Hematology
+        </h5>
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="blood_glucose_random">
+                <span>Blood Glucose Random</span>
+                <span class="unit">mg/dL</span>
+              </label>
+              <input id="blood_glucose_random" class="form-control" type="number" step="any" name="blood_glucose_random" placeholder="e.g. 120" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="blood_urea">
+                <span>Blood Urea</span>
+                <span class="unit">mg/dL</span>
+              </label>
+              <input id="blood_urea" class="form-control" type="number" step="any" name="blood_urea" placeholder="e.g. 36" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="serum_creatinine">
+                <span>Serum Creatinine</span>
+                <span class="unit">mg/dL</span>
+              </label>
+              <input id="serum_creatinine" class="form-control" type="number" step="any" name="serum_creatinine" placeholder="e.g. 1.1" required>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="sodium">
+                <span>Sodium</span>
+                <span class="unit">mEq/L</span>
+              </label>
+              <input id="sodium" class="form-control" type="number" step="any" name="sodium" placeholder="e.g. 138" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="potassium">
+                <span>Potassium</span>
+                <span class="unit">mEq/L</span>
+              </label>
+              <input id="potassium" class="form-control" type="number" step="any" name="potassium" placeholder="e.g. 4.4" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="haemoglobin">
+                <span>Hemoglobin</span>
+                <span class="unit">g/dL</span>
+              </label>
+              <input id="haemoglobin" class="form-control" type="number" step="any" name="haemoglobin" placeholder="e.g. 14.5" required>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="packed_cell_volume">
+                <span>Packed Cell Volume (PCV)</span>
+                <span class="unit">%</span>
+              </label>
+              <input id="packed_cell_volume" class="form-control" type="number" step="any" name="packed_cell_volume" placeholder="e.g. 44" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="white_blood_cell_count">
+                <span>White Blood Cell Count</span>
+                <span class="unit">cells/cumm</span>
+              </label>
+              <input id="white_blood_cell_count" class="form-control" type="number" step="any" name="white_blood_cell_count" placeholder="e.g. 7800" required>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="red_blood_cell_count">
+                <span>Red Blood Cell Count</span>
+                <span class="unit">mil/cmm</span>
+              </label>
+              <input id="red_blood_cell_count" class="form-control" type="number" step="any" name="red_blood_cell_count" placeholder="e.g. 5.2" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Clinical History & Systemic Conditions -->
+        <h5 class="text-dark font-weight-bold mb-3 d-flex align-items-center" style="font-size: 15px;">
+          <span class="badge badge-light border mr-2 text-primary" style="font-size: 11px;">Section 3</span>
+          Comorbidities &amp; Physical Symptoms
+        </h5>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="hypertension">
+                <span>Hypertension</span>
+                <span class="unit">0: No · 1: Yes</span>
+              </label>
+              <select id="hypertension" class="form-control" name="hypertension" required>
+                <option value="0">0 - No</option>
+                <option value="1">1 - Yes</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="diabetes_mellitus">
+                <span>Diabetes Mellitus</span>
+                <span class="unit">0: No · 1: Yes</span>
+              </label>
+              <select id="diabetes_mellitus" class="form-control" name="diabetes_mellitus" required>
+                <option value="0">0 - No</option>
+                <option value="1">1 - Yes</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="coronary_artery_disease">
+                <span>Coronary Artery Disease</span>
+                <span class="unit">0: No · 1: Yes</span>
+              </label>
+              <select id="coronary_artery_disease" class="form-control" name="coronary_artery_disease" required>
+                <option value="0">0 - No</option>
+                <option value="1">1 - Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="appetite">
+                <span>Appetite</span>
+                <span class="unit">0: Good · 1: Poor</span>
+              </label>
+              <select id="appetite" class="form-control" name="appetite" required>
+                <option value="0">0 - Good</option>
+                <option value="1">1 - Poor</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="peda_edema">
+                <span>Pedal Edema</span>
+                <span class="unit">0: No · 1: Yes</span>
+              </label>
+              <select id="peda_edema" class="form-control" name="peda_edema" required>
+                <option value="0">0 - No</option>
+                <option value="1">1 - Yes</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="aanemia">
+                <span>Anemia</span>
+                <span class="unit">0: No · 1: Yes</span>
+              </label>
+              <select id="aanemia" class="form-control" name="aanemia" required>
+                <option value="0">0 - No</option>
+                <option value="1">1 - Yes</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-top d-flex align-items-center justify-content-between">
+          <a href="/" class="btn-med-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back to Directory
+          </a>
+          <button type="submit" class="btn-med-primary">
+            <i class="fa-solid fa-cubes"></i> Evaluate Renal Function
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function fillHealthyKidney() {
+    document.getElementById('age').value = '35';
+    document.getElementById('blood_pressure').value = '70';
+    document.getElementById('specific_gravity').value = '1.025';
+    document.getElementById('albumin').value = '0';
+    document.getElementById('sugar').value = '0';
+    document.getElementById('red_blood_cells').value = '1';
+    document.getElementById('pus_cell').value = '1';
+    document.getElementById('pus_cell_clumps').value = '0';
+    document.getElementById('bacteria').value = '0';
+    document.getElementById('blood_glucose_random').value = '95';
+    document.getElementById('blood_urea').value = '25';
+    document.getElementById('serum_creatinine').value = '0.9';
+    document.getElementById('sodium').value = '140';
+    document.getElementById('potassium').value = '4.2';
+    document.getElementById('haemoglobin').value = '15.2';
+    document.getElementById('packed_cell_volume').value = '48';
+    document.getElementById('white_blood_cell_count').value = '6800';
+    document.getElementById('red_blood_cell_count').value = '5.4';
+    document.getElementById('hypertension').value = '0';
+    document.getElementById('diabetes_mellitus').value = '0';
+    document.getElementById('coronary_artery_disease').value = '0';
+    document.getElementById('appetite').value = '0';
+    document.getElementById('peda_edema').value = '0';
+    document.getElementById('aanemia').value = '0';
+  }
+
+  function fillRiskKidney() {
+    document.getElementById('age').value = '62';
+    document.getElementById('blood_pressure').value = '90';
+    document.getElementById('specific_gravity').value = '1.010';
+    document.getElementById('albumin').value = '3';
+    document.getElementById('sugar').value = '2';
+    document.getElementById('red_blood_cells').value = '0';
+    document.getElementById('pus_cell').value = '0';
+    document.getElementById('pus_cell_clumps').value = '1';
+    document.getElementById('bacteria').value = '1';
+    document.getElementById('blood_glucose_random').value = '190';
+    document.getElementById('blood_urea').value = '82';
+    document.getElementById('serum_creatinine').value = '3.4';
+    document.getElementById('sodium').value = '128';
+    document.getElementById('potassium').value = '5.6';
+    document.getElementById('haemoglobin').value = '9.2';
+    document.getElementById('packed_cell_volume').value = '29';
+    document.getElementById('white_blood_cell_count').value = '11200';
+    document.getElementById('red_blood_cell_count').value = '3.1';
+    document.getElementById('hypertension').value = '1';
+    document.getElementById('diabetes_mellitus').value = '1';
+    document.getElementById('coronary_artery_disease').value = '1';
+    document.getElementById('appetite').value = '1';
+    document.getElementById('peda_edema').value = '1';
+    document.getElementById('aanemia').value = '1';
+  }
+</script>
+
+<%- include('partials/footer') %>

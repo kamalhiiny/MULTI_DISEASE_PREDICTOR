@@ -1,0 +1,245 @@
+<%- include('partials/header') %>
+
+<div class="row justify-content-center">
+  <div class="col-lg-10 col-xl-9">
+
+    <div class="med-page-header">
+      <div class="med-page-badge" style="background: #fee2e2; border-color: #fecaca; color: #dc2626;">
+        <i class="fa-solid fa-heart-pulse"></i> Cardiology Diagnostic Suite
+      </div>
+      <h1 class="med-page-title">Cardiovascular Disease Risk Analysis</h1>
+      <p class="med-page-desc">
+        Evaluates hemodynamic markers, exercise stress electrocardiogram data, and fluoroscopy imaging to predict coronary disease.
+      </p>
+    </div>
+
+    <div class="med-card">
+      <!-- Preset Toolbar -->
+      <div class="preset-toolbar">
+        <div class="preset-toolbar-title">
+          <i class="fa-solid fa-wand-magic-sparkles text-primary"></i> Preset Clinical Profiles:
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn-med-secondary" onclick="fillHealthyHeart()">
+            <i class="fa-solid fa-check text-success"></i> Low-Risk Cardiac
+          </button>
+          <button type="button" class="btn-med-secondary" onclick="fillRiskHeart()">
+            <i class="fa-solid fa-triangle-exclamation text-danger"></i> High-Risk Cardiac
+          </button>
+        </div>
+      </div>
+
+      <form id="heartForm" class="form-horizontal" action="/predict" method="POST">
+        <div class="row">
+          <!-- Patient Demographics -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="age">
+                <span>Patient Age</span>
+                <span class="unit">years</span>
+              </label>
+              <input id="age" class="form-control" type="number" step="any" min="1" name="age" placeholder="e.g. 52" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="sex">
+                <span>Biological Sex</span>
+                <span class="unit">1: Male · 0: Female</span>
+              </label>
+              <select id="sex" class="form-control" name="sex" required>
+                <option value="1">1 - Male</option>
+                <option value="0">0 - Female</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Hemodynamics & Chest Pain -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="cp">
+                <span>Chest Pain Type (CP)</span>
+                <span class="unit">0 - 3 scale</span>
+              </label>
+              <select id="cp" class="form-control" name="cp" required>
+                <option value="0">0 - Typical Angina</option>
+                <option value="1">1 - Atypical Angina</option>
+                <option value="2">2 - Non-anginal Pain</option>
+                <option value="3">3 - Asymptomatic</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="trestbps">
+                <span>Resting Blood Pressure</span>
+                <span class="unit">mm Hg</span>
+              </label>
+              <input id="trestbps" class="form-control" type="number" step="any" min="50" name="trestbps" placeholder="e.g. 120" required>
+            </div>
+          </div>
+
+          <!-- Lipid & Glucose -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="chol">
+                <span>Serum Cholesterol</span>
+                <span class="unit">mg/dL</span>
+              </label>
+              <input id="chol" class="form-control" type="number" step="any" min="50" name="chol" placeholder="e.g. 210" required>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="fbs">
+                <span>Fasting Blood Sugar &gt; 120 mg/dL</span>
+                <span class="unit">1: True · 0: False</span>
+              </label>
+              <select id="fbs" class="form-control" name="fbs" required>
+                <option value="0">0 - False (Normal &le; 120)</option>
+                <option value="1">1 - True (Elevated &gt; 120)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Resting ECG & Stress Response -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="restecg">
+                <span>Resting Electrocardiogram</span>
+                <span class="unit">0 - 2 scale</span>
+              </label>
+              <select id="restecg" class="form-control" name="restecg" required>
+                <option value="0">0 - Normal</option>
+                <option value="1">1 - ST-T Wave Abnormality</option>
+                <option value="2">2 - Left Ventricular Hypertrophy</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="thalach">
+                <span>Max Heart Rate Achieved</span>
+                <span class="unit">bpm</span>
+              </label>
+              <input id="thalach" class="form-control" type="number" step="any" min="50" name="thalach" placeholder="e.g. 155" required>
+            </div>
+          </div>
+
+          <!-- Angina & ST Segment -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="exang">
+                <span>Exercise-Induced Angina</span>
+                <span class="unit">1: Yes · 0: No</span>
+              </label>
+              <select id="exang" class="form-control" name="exang" required>
+                <option value="0">0 - No</option>
+                <option value="1">1 - Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="med-label" for="oldpeak">
+                <span>ST Depression (Oldpeak)</span>
+                <span class="unit">relative to rest</span>
+              </label>
+              <input id="oldpeak" class="form-control" type="number" step="any" min="0" name="oldpeak" placeholder="e.g. 0.8" required>
+            </div>
+          </div>
+
+          <!-- Slope, CA, Thal -->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="slope">
+                <span>Peak Exercise ST Slope</span>
+                <span class="unit">0 - 2</span>
+              </label>
+              <select id="slope" class="form-control" name="slope" required>
+                <option value="0">0 - Upsloping</option>
+                <option value="1">1 - Flat</option>
+                <option value="2">2 - Downsloping</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="ca">
+                <span>Major Vessels Colored (CA)</span>
+                <span class="unit">0 - 3 vessels</span>
+              </label>
+              <input id="ca" class="form-control" type="number" step="any" min="0" max="3" name="ca" placeholder="e.g. 0" required>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="med-label" for="thal">
+                <span>Thallium Stress Scintigraphy</span>
+                <span class="unit">1 - 3</span>
+              </label>
+              <select id="thal" class="form-control" name="thal" required>
+                <option value="1">1 - Normal</option>
+                <option value="2">2 - Fixed Defect</option>
+                <option value="3">3 - Reversible Defect</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-top d-flex align-items-center justify-content-between">
+          <a href="/" class="btn-med-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back to Directory
+          </a>
+          <button type="submit" class="btn-med-primary">
+            <i class="fa-solid fa-heart-pulse"></i> Predict Cardiac Risk
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function fillHealthyHeart() {
+    document.getElementById('age').value = '42';
+    document.getElementById('sex').value = '0';
+    document.getElementById('cp').value = '0';
+    document.getElementById('trestbps').value = '118';
+    document.getElementById('chol').value = '190';
+    document.getElementById('fbs').value = '0';
+    document.getElementById('restecg').value = '0';
+    document.getElementById('thalach').value = '168';
+    document.getElementById('exang').value = '0';
+    document.getElementById('oldpeak').value = '0.0';
+    document.getElementById('slope').value = '0';
+    document.getElementById('ca').value = '0';
+    document.getElementById('thal').value = '1';
+  }
+
+  function fillRiskHeart() {
+    document.getElementById('age').value = '64';
+    document.getElementById('sex').value = '1';
+    document.getElementById('cp').value = '3';
+    document.getElementById('trestbps').value = '155';
+    document.getElementById('chol').value = '285';
+    document.getElementById('fbs').value = '1';
+    document.getElementById('restecg').value = '2';
+    document.getElementById('thalach').value = '115';
+    document.getElementById('exang').value = '1';
+    document.getElementById('oldpeak').value = '2.8';
+    document.getElementById('slope').value = '2';
+    document.getElementById('ca').value = '2';
+    document.getElementById('thal').value = '3';
+  }
+</script>
+
+<%- include('partials/footer') %>
