@@ -59,7 +59,6 @@ The suite encompasses seven validated diagnostic modalities spanning endocrinolo
 ```text
 ├── .env.example              # Environment configuration template
 ├── .gitignore                # Git ignore definitions
-├── LICENSE                   # Software license
 ├── README.md                 # Complete project documentation
 ├── package.json              # Project dependencies and operational scripts
 ├── server.js                 # Express application server and diagnostic routing
@@ -179,9 +178,3 @@ The suite encompasses seven validated diagnostic modalities spanning endocrinolo
 
 - **Kamalhiiny G**
 - **Harini S**
-
----
-
-## 📜 License
-
-This project is licensed under the terms specified in the [LICENSE](LICENSE) file.
